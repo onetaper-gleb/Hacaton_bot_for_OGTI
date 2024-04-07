@@ -98,7 +98,7 @@ async def group_exists(message: Message):
 
 async def registered_message(message: Message):
     for j in students:
-        if j.chat_id == message.chat.id:
+        if j.chat_id == message.chat.id and j.previous_actions:
             if j.previous_actions[-1][0] == id_wait:
                 exist, group_name, group_description = exists(message, j.id)
                 if exist:

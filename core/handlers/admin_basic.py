@@ -4,7 +4,7 @@ import pygame
 from aiogram import Bot
 from aiogram.types import CallbackQuery, Message
 from core.handlers.basic import users
-from core.handlers.teacher_basic import registered_message
+from core.handlers.teacher_basic import registered_message, get_pdf_teach
 from core.keyboards.reply import START_KEYBOARD
 from core.keyboards.reply_admins import FIRST_MAIN, MAIN, ADMIN_CONTROL, GROUPS_CHECK, CREATE_GROUP_5, CREATED_GROUP, \
     TEACHER_SETTINGS, CREATED_TEACHER
@@ -19,7 +19,6 @@ def start_admin(spisok):
     if spisok:
         for i in spisok:
             Admin(int(i[1]), i[0], int(i[2]), admins)
-            print(i)
 
 
 async def delete_message(message: Message):
@@ -295,10 +294,15 @@ async def group_created(message: Message):
 
 
 async def get_pdf(message: Message, bot: Bot):
+    flag = True
     for j in admins:
-        if j.chat_id == message.chat.id:
+        if j.chat_id == message.chat.id and j.previous_actions:
             if j.previous_actions[-1][0] == group_created:
+                flag = False
                 await asyncio.create_task(pdf_load_to_bd(message, bot))
+            break
+    if flag:
+        await asyncio.create_task(get_pdf_teach(message, bot))
 
 
 async def pdf_load_to_bd(message: Message, bot: Bot):
@@ -306,7 +310,7 @@ async def pdf_load_to_bd(message: Message, bot: Bot):
     file = await bot.get_file(file_id)
     file_path = file.file_path
     await bot.download_file(file_path, f"schedules/{schedule_add()}")
-    await message.answer("Поздравляем с успешной регистрацией", reply_markup=CREATED_GROUP.as_markup())
+    await message.answer("Группа успешно создана", reply_markup=CREATED_GROUP.as_markup())
 
 
 async def teacher_settings(call: CallbackQuery):

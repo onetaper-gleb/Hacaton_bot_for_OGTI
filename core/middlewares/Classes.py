@@ -62,6 +62,7 @@ class Teacher(pygame.sprite.Sprite):
         self.id = id
         self.username = username
         self.chat_id = chat_id
+        self.subs = ''
         self.previous_actions = []
         self.registration_list = []
         self.page = 0
