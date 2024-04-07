@@ -13,7 +13,7 @@ from core.handlers.basic import choice
 from core.handlers.student_basic import welcoming_message, id_wait, id_wait_change, start_students, return_back, \
     registered_message, registration_step_1, lobby_student, profile_student, choose_subject, send_schedule
 from core.handlers.teacher_basic import welcoming_message_teacher, registration_step_2_teach, registration_teacher, \
-    main_lobby_teacher, start_teacher, Lessons_teacher, Create_lesson, Create_lecture
+    main_lobby_teacher, start_teacher, Lessons_teacher, Create_lesson, Create_lecture, Create_lab, Create_test
 from core.settings import settings
 from core.middlewares.functions import get_spisok
 from core.utills.commands import set_commands
@@ -41,6 +41,8 @@ async def start():
     dp.startup.register(start_bot)
     dp.shutdown.register(end_bot)
     dp.message.register(get_pdf, F.content_type == 'document')
+    dp.callback_query.register(Create_lab, F.data == 'Create_lab')
+    dp.callback_query.register(Create_test, F.data == 'Create_test')
     dp.callback_query.register(Create_lecture, F.data == 'Create_lecture')
     dp.callback_query.register(Create_lesson, F.data == 'Create_lesson')
     dp.callback_query.register(Lessons_teacher, F.data == 'Lessons_teacher')

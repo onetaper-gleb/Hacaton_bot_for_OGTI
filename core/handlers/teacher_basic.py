@@ -10,7 +10,7 @@ from core.keyboards.reply_teacher import WELCOMING_MESSAGE_TEACHER, REGISTRATION
     MAIN_LOBBY_TEACHER, LESSONS_TEACHER, CREATE_LESSON, LESSON_PDF_CONV
 from core.middlewares.Classes import Teacher
 from core.middlewares.extra_gen import append_all_2
-from core.middlewares.functions_teacher import checker_teach, lecture_add
+from core.middlewares.functions_teacher import checker_teach, lecture_add, lab_add, test_add
 
 teachers = pygame.sprite.Group()
 
@@ -218,8 +218,8 @@ async def pdf_load_to_bd(message: Message, bot: Bot, typ):
                 await bot.download_file(file_path, f"lectures/{lecture_add(file_id[1:10], j.subs)}")
                 await message.answer("Лекция добавлена, пора назначить её кому-нибудь", reply_markup=LESSON_PDF_CONV.as_markup())
             elif typ == 'lab':
-                await bot.download_file(file_path, f"lectures/{lecture_add(file_id[1:10], j.subs)}")
+                await bot.download_file(file_path, f"lectures/{lab_add(file_id[1:10], j.subs)}")
                 await message.answer("Лабораторная добавлена, пора назначить её кому-нибудь", reply_markup=LESSON_PDF_CONV.as_markup())
             elif typ == 'test':
-                await bot.download_file(file_path, f"lectures/{lecture_add(file_id[1:10], j.subs)}")
+                await bot.download_file(file_path, f"lectures/{test_add(file_id[1:10], j.subs)}")
                 await message.answer("Тест добавлена, пора назначить его кому-нибудь", reply_markup=LESSON_PDF_CONV.as_markup())

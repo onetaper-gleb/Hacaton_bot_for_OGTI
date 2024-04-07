@@ -71,11 +71,6 @@ LESSONS_TEACHER.add(types.InlineKeyboardButton(
 )
 
 LESSONS_TEACHER.add(types.InlineKeyboardButton(
-    text="Ваши уроки",
-    callback_data="Your_lessons")
-)
-
-LESSONS_TEACHER.add(types.InlineKeyboardButton(
     text="Главное меню",
     callback_data="Teacher_menu_main")
 )
