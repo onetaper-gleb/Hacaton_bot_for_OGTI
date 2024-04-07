@@ -12,7 +12,8 @@ from core.handlers.admin_basic import welcoming_message_ad, main_menu_admin, adm
 from core.handlers.basic import choice
 from core.handlers.student_basic import welcoming_message, id_wait, id_wait_change, start_students, return_back, \
     registered_message, registration_step_1, lobby_student, profile_student, choose_subject, send_schedule
-from core.handlers.teacher_basic import welcoming_message_teacher, registration_step_2_teach, registration_teacher
+from core.handlers.teacher_basic import welcoming_message_teacher, registration_step_2_teach, registration_teacher, \
+    main_lobby_teacher, start_teacher, Lessons_teacher, Create_lesson, Create_lecture
 from core.settings import settings
 from core.middlewares.functions import get_spisok
 from core.utills.commands import set_commands
@@ -23,6 +24,7 @@ async def start_bot(bot: Bot):
     sp = get_spisok()
     start_students(sp[0], sp[3])
     start_admin(sp[2])
+    start_teacher(sp[1])
     await bot.send_message(settings.bots.admin_id, 'Bot has just started working')
 
 
@@ -39,6 +41,10 @@ async def start():
     dp.startup.register(start_bot)
     dp.shutdown.register(end_bot)
     dp.message.register(get_pdf, F.content_type == 'document')
+    dp.callback_query.register(Create_lecture, F.data == 'Create_lecture')
+    dp.callback_query.register(Create_lesson, F.data == 'Create_lesson')
+    dp.callback_query.register(Lessons_teacher, F.data == 'Lessons_teacher')
+    dp.callback_query.register(main_lobby_teacher, F.data == 'Teacher_menu_main')
     dp.callback_query.register(registration_teacher, F.data == 'Teacher_continue')
     dp.callback_query.register(registration_step_2_teach, F.data == 'Teacher_registrate')
     dp.callback_query.register(create_teacher_1, F.data == 'Add_teacher')
