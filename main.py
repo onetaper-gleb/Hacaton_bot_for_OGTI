@@ -12,7 +12,7 @@ from core.handlers.admin_basic import welcoming_message_ad, main_menu_admin, adm
 from core.handlers.basic import choice
 from core.handlers.student_basic import welcoming_message, id_wait, id_wait_change, start_students, return_back, \
     registered_message, registration_step_1, lobby_student, profile_student, choose_subject, send_schedule
-from core.handlers.teacher_basic import welcoming_message_teacher
+from core.handlers.teacher_basic import welcoming_message_teacher, registration_step_2_teach, registration_teacher
 from core.settings import settings
 from core.middlewares.functions import get_spisok
 from core.utills.commands import set_commands
@@ -39,6 +39,8 @@ async def start():
     dp.startup.register(start_bot)
     dp.shutdown.register(end_bot)
     dp.message.register(get_pdf, F.content_type == 'document')
+    dp.callback_query.register(registration_teacher, F.data == 'Teacher_continue')
+    dp.callback_query.register(registration_step_2_teach, F.data == 'Teacher_registrate')
     dp.callback_query.register(create_teacher_1, F.data == 'Add_teacher')
     dp.callback_query.register(teacher_settings, F.data == 'Admin_add_teacher')
     dp.callback_query.register(create_group_1, F.data == 'Create_group')

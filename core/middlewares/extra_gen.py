@@ -69,3 +69,10 @@ def append_all(lis, id):
     con.commit()
     con.close()
 
+
+def append_all_2(lis, id):
+    con = sqlite3.connect("data")
+    cur = con.cursor()
+    idi = cur.execute(f"""UPDATE Users SET id = "None", name = "{lis[1]}", surname = "{lis[0]}", second_name = "{lis[1]}", number = "{lis[3]}", email = "{lis[4]}" WHERE (id_person = "{id}")""").fetchall()
+    con.commit()
+    con.close()

@@ -5,8 +5,9 @@ from aiogram.types import CallbackQuery, Message
 
 from core.handlers.basic import users
 from core.keyboards.reply import START_KEYBOARD
-from core.keyboards.reply_teacher import WELCOMING_MESSAGE_TEACHER
+from core.keyboards.reply_teacher import WELCOMING_MESSAGE_TEACHER, REGISTRATION_TEACHER, REGISTRATION_SUCCESS_TEACHER
 from core.middlewares.Classes import Teacher
+from core.middlewares.extra_gen import append_all_2
 from core.middlewares.functions_teacher import checker_teach
 
 teachers = pygame.sprite.Group()
@@ -45,80 +46,89 @@ async def welcoming_message_teacher(call: CallbackQuery):
 async def registered_message(message: Message):
     for j in teachers:
         if j.chat_id == message.chat.id:
-            if j.previous_actions[-1][0] == registration_step_2:
-                await asyncio.create_task(registration_step_3(message))
-            elif j.previous_actions[-1][0] == registration_step_3:
-                await asyncio.create_task(registration_step_4(message))
-            elif j.previous_actions[-1][0] == registration_step_4:
-                await asyncio.create_task(registration_step_5(message))
-            elif j.previous_actions[-1][0] == registration_step_5:
-                await asyncio.create_task(registration_step_6(message))
-            elif j.previous_actions[-1][0] == registration_step_6:
-                await asyncio.create_task(registration_step_7(message))
+            if j.previous_actions[-1][0] == registration_step_2_teach:
+                await asyncio.create_task(registration_step_3_teach(message))
+            elif j.previous_actions[-1][0] == registration_step_3_teach:
+                await asyncio.create_task(registration_step_4_teach(message))
+            elif j.previous_actions[-1][0] == registration_step_4_teach:
+                await asyncio.create_task(registration_step_5_teach(message))
+            elif j.previous_actions[-1][0] == registration_step_5_teach:
+                await asyncio.create_task(registration_step_6_teach(message))
+            elif j.previous_actions[-1][0] == registration_step_6_teach:
+                await asyncio.create_task(registration_step_7_teach(message))
 
 
 async def registration_teacher(call: CallbackQuery):
     id_us = call.message.chat.id
     for j in teachers:
         if j.chat_id == id_us:
-            await call.message.edit_text('Пройдите пожалуйста регистрацию')
+            await call.message.edit_text('Пройдите пожалуйста регистрацию', reply_markup=REGISTRATION_TEACHER.as_markup())
 
 
-async def registration_step_2(call: CallbackQuery):
+async def registration_step_2_teach(call: CallbackQuery):
     for j in teachers:
         if j.chat_id == call.message.chat.id:
             await asyncio.create_task(delete_message(call.message))
             j.previous_actions.append(
-                (registration_step_2, await call.message.answer("Введите свою Фамилию")))
+                (registration_step_2_teach, await call.message.answer("Введите свою Фамилию")))
             break
 
 
-async def registration_step_3(message: Message):
+async def registration_step_3_teach(message: Message):
     for j in teachers:
         if j.chat_id == message.chat.id:
             await asyncio.create_task(delete_message(j.previous_actions[-1][1]))
             await asyncio.create_task(delete_message(message))
             j.registration_list.append(message.text)
-            j.previous_actions.append((registration_step_3, await message.answer("Введите своё имя")))
+            j.previous_actions.append((registration_step_3_teach, await message.answer("Введите своё имя")))
             break
 
 
-async def registration_step_4(message: Message):
+async def registration_step_4_teach(message: Message):
     for j in teachers:
         if j.chat_id == message.chat.id:
             await asyncio.create_task(delete_message(j.previous_actions[-1][1]))
             await asyncio.create_task(delete_message(message))
             j.registration_list.append(message.text)
-            j.previous_actions.append((registration_step_4, await message.answer("Введите своё отчество")))
+            j.previous_actions.append((registration_step_4_teach, await message.answer("Введите своё отчество")))
             break
 
 
-async def registration_step_5(message: Message):
+async def registration_step_5_teach(message: Message):
     for j in teachers:
         if j.chat_id == message.chat.id:
             await asyncio.create_task(delete_message(j.previous_actions[-1][1]))
             await asyncio.create_task(delete_message(message))
             j.registration_list.append(message.text)
-            j.previous_actions.append((registration_step_5, await message.answer("Введите контактный телефон")))
+            j.previous_actions.append((registration_step_5_teach, await message.answer("Введите контактный телефон")))
             break
 
 
-async def registration_step_6(message: Message):
+async def registration_step_6_teach(message: Message):
     for j in teachers:
         if j.chat_id == message.chat.id:
             await asyncio.create_task(delete_message(j.previous_actions[-1][1]))
             await asyncio.create_task(delete_message(message))
             j.registration_list.append(message.text)
-            j.previous_actions.append((registration_step_6, await message.answer("Введите свою почту")))
+            j.previous_actions.append((registration_step_6_teach, await message.answer("Введите свою почту")))
             break
 
 
-async def registration_step_7(message: Message):
+async def registration_step_7_teach(message: Message):
     for j in teachers:
         if j.chat_id == message.chat.id:
             await asyncio.create_task(delete_message(j.previous_actions[-1][1]))
             await asyncio.create_task(delete_message(message))
             j.registration_list.append(message.text)
-            j.previous_actions.append((registration_step_7, message))
-            await message.answer(f'Вы успешно вошли в группу курса {j.group_name}. ✅', reply_markup=REGISTRATION_SUCCESS.as_markup())
+            j.previous_actions.append((registration_step_7_teach, message))
+            append_all_2(j.registration_list, j.id)
+            await message.answer(f'Вы успешно зарегистрировались. ✅', reply_markup=REGISTRATION_SUCCESS_TEACHER.as_markup())
+            break
+
+
+async def main_lobby_teacher(call: CallbackQuery):
+    for j in teachers:
+        if j.chat_id == call.message.chat.id:
+            await asyncio.create_task(delete_message(call.message))
+            j.previous_actions.append((registration_step_7_teach, call.message))
             break

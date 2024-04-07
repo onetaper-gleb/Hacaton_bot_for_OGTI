@@ -63,6 +63,7 @@ class Teacher(pygame.sprite.Sprite):
         self.username = username
         self.chat_id = chat_id
         self.previous_actions = []
+        self.registration_list = []
         self.page = 0
         if add:
             self.append_to_bd()

@@ -4,6 +4,7 @@ import pygame
 from aiogram import Bot
 from aiogram.types import CallbackQuery, Message
 from core.handlers.basic import users
+from core.handlers.teacher_basic import registered_message
 from core.keyboards.reply import START_KEYBOARD
 from core.keyboards.reply_admins import FIRST_MAIN, MAIN, ADMIN_CONTROL, GROUPS_CHECK, CREATE_GROUP_5, CREATED_GROUP, \
     TEACHER_SETTINGS, CREATED_TEACHER
@@ -108,35 +109,44 @@ async def admin_add_1(call: CallbackQuery):
 
 
 async def admin_message_register(message: Message):
+    flag = False
     for j in admins:
-        print(message.from_user.username, j.username)
-        if j.chat_id == message.chat.id:
-            print("SUCCESS")
+        if j.chat_id == message.chat.id and j.previous_actions:
             if j.previous_actions[-1][0] == admin_add_1:
                 add_admin_to_bd(message.text)
+                flag = True
                 await asyncio.create_task(admin_control_2(message))
             elif j.previous_actions[-1][0] == admin_delete:
                 add_admin_to_bd(message.text, add=False)
+                flag = True
                 await asyncio.create_task(admin_control_2(message))
             elif j.previous_actions[-1][0] == groups_check:
+                flag = True
                 await asyncio.create_task(group_check(message))
-                print('Hey')
             elif j.previous_actions[-1][0] == create_group_1:
+                flag = True
                 await asyncio.create_task(create_group_2(message))
-                print('Hey')
             elif j.previous_actions[-1][0] == create_group_2:
+                flag = True
                 await asyncio.create_task(create_group_3(message))
             elif j.previous_actions[-1][0] == create_group_3:
+                flag = True
                 await asyncio.create_task(create_group_5(message))
             elif j.previous_actions[-1][0] == create_group_5:
+                flag = True
                 await asyncio.create_task(group_created(message))
             elif j.previous_actions[-1][0] == create_teacher_1:
+                flag = True
                 await asyncio.create_task(create_teacher_2(message))
             elif j.previous_actions[-1][0] == create_teacher_2:
+                flag = True
                 await asyncio.create_task(create_teacher_3(message))
             elif j.previous_actions[-1][0] == create_teacher_3:
+                flag = True
                 await asyncio.create_task(created_teacher(message))
             break
+    if not flag:
+        await asyncio.create_task(registered_message(message))
 
 
 async def admin_control_2(message: Message):

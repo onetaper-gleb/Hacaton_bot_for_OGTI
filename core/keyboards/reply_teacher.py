@@ -33,3 +33,14 @@ REGISTRATION_TEACHER.add(types.InlineKeyboardButton(
 )
 
 REGISTRATION_TEACHER.adjust(2)
+
+#################################################################
+
+REGISTRATION_SUCCESS_TEACHER = InlineKeyboardBuilder()\
+
+REGISTRATION_SUCCESS_TEACHER.add(types.InlineKeyboardButton(
+    text="Продолжить",
+    callback_data="Teacher_menu_main")
+)
+
+REGISTRATION_SUCCESS_TEACHER.adjust(2)
